@@ -1,2 +1,2 @@
-# coderhoyse_sql_Rondon
+# coderhouse_sql_Rondon
 CURSO_SQL
