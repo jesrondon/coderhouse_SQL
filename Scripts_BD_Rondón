@@ -1,0 +1,53 @@
+--- creación del esquema de BD---
+CREATE DATABASE VenetTelecom;
+USE VenetTelecom;
+
+----- Creación tabla Canal de activación y postventa ---
+
+CREATE TABLE Canal (
+    ID_Canal INT PRIMARY KEY,
+    Nombre_Canal VARCHAR(100)
+);
+
+----- Creación Tabla de Planes y servicios de valor agregado
+CREATE TABLE PlanServicio (
+    ID_PlanServicio INT PRIMARY KEY,
+    Nombre_PlanServicio VARCHAR(100),
+    Precio DECIMAL(10,2),
+    Duración VARCHAR(50),
+    Fecha_marcaje DATE
+);
+
+------- Creación Tabla Customer
+CREATE TABLE Customer (
+    ID_Cliente INT PRIMARY KEY,
+    Nombre VARCHAR(100),
+    Apellido VARCHAR(100),
+    FechaNacimiento DATE,
+    Género VARCHAR(20),
+    ID_Canal INT,
+    Correo VARCHAR(255),
+    Teléfono VARCHAR(50),
+    Direccion_facturacion VARCHAR(255),
+    ID_AtencionAgente INT,
+    FOREIGN KEY (ID_Canal) REFERENCES Canal(ID_Canal),
+    FOREIGN KEY (ID_AtencionAgente) REFERENCES Atencion_Agente(ID_AtencionAgente)
+);
+
+--------- Creación 
+CREATE TABLE Atencion_Agente (
+    ID_AtencionAgente INT PRIMARY KEY,
+    Tipo VARCHAR(50), -- 'Centro' o 'Agente'
+    Nombre VARCHAR(100),
+    Ubicacion VARCHAR(255) -- Solo aplicable si es Centro de Atención
+);
+
+-------- Creacion Tabla Customer y PlanServicio
+
+CREATE TABLE Customer_Plan (
+    ID_Cliente INT,
+    ID_PlanServicio INT,
+    PRIMARY KEY (ID_Cliente, ID_PlanServicio),
+    FOREIGN KEY (ID_Cliente) REFERENCES Customer(ID_Cliente),
+    FOREIGN KEY (ID_PlanServicio) REFERENCES PlanServicio(ID_PlanServicio)
+);
