@@ -1,0 +1,4 @@
+INSERT INTO `venettelecom`.`customer_plan` (`ID_Cliente`, `ID_PlanServicio`) VALUES (NULL, NULL);
+INSERT INTO `venettelecom`.`plan_servicios` (`ID_PlanServicio`, `Nombre_PlanServicio`, `Precio`, `Duración`, `Fecha_marcaje`, `Status`, `VIP_CODE`, `Modalidad`, `tecnologia`) VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `venettelecom`.`canal` (`ID_Canal`, `Nombre_Canal`) VALUES (NULL, NULL);
+INSERT INTO `venettelecom`.`atencion_agente` (`ID_AtencionAgente`, `Tipo`, `Nombre`, `Ubicacion`) VALUES (NULL, NULL, NULL, NULL);
