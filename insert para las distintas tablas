@@ -1,4 +1,20 @@
-INSERT INTO `venettelecom`.`customer_plan` (`ID_Cliente`, `ID_PlanServicio`) VALUES (NULL, NULL);
-INSERT INTO `venettelecom`.`plan_servicios` (`ID_PlanServicio`, `Nombre_PlanServicio`, `Precio`, `Duración`, `Fecha_marcaje`, `Status`, `VIP_CODE`, `Modalidad`, `tecnologia`) VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+------ insert customer_plan ------
+INSERT INTO `venettelecom`.`customer_plan` (`ID_Cliente`, `ID_PlanServicio`) VALUES (1, 1);
+
+--- insert  canal ------
 INSERT INTO `venettelecom`.`canal` (`ID_Canal`, `Nombre_Canal`) VALUES (NULL, NULL);
+
+----- insert atencion_agente ---------
 INSERT INTO `venettelecom`.`atencion_agente` (`ID_AtencionAgente`, `Tipo`, `Nombre`, `Ubicacion`) VALUES (NULL, NULL, NULL, NULL);
+
+------- insert plan_servicios-------
+insert plan_servicios values ('','Noches_A_1000','150.50','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
+insert plan_servicios values ('3','Inteligente_500MB','33.02','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
+insert plan_servicios values ('4','Conectados_2GB','135.24','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
+insert plan_servicios values ('5','Conectados_6GB','218.58999','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
+insert plan_servicios values ('6','Conectados_12GB','437.19','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
+insert plan_servicios values ('7','Empresas_2GB','135.24','','2024-04-01','Activo','51','postpago','2G/3G/4G LTE');
+insert plan_servicios values ('8','Empresas_6GB','218.58999','','2024-04-01','Activo','51','postpago','2G/3G/4G LTE');
+insert plan_servicios values ('9','Empresas_12GB','437.19','','2024-04-01','Activo','51','postpago','2G/3G/4G LTE');
+
+----- insert customer --- values ('1','Jesús Elias','Rondón Rivas','1988-04-21','Masculino','1','respaldodigitel@gmail.com','+5804142598784','Esquina pescador a cochera torre 997 piso 10 apartamento 03','1','11');
