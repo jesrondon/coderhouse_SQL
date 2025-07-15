@@ -1,0 +1,37 @@
+use venettelecom;
+
+------ triger para cuando se inserte un registro o se haga un  update se actulie el campo de fecha_modificacion en la tabla: customer_plan ------
+----  Trigger para INSERT ----
+DELIMITER //
+
+DELIMITER //
+
+CREATE TRIGGER actualizar_fecha_modificacion_insert
+AFTER INSERT ON customer
+FOR EACH ROW
+BEGIN
+    UPDATE customer_plan
+    SET fecha_modificacion = NOW()
+    WHERE id_cliente = NEW.id_cliente;
+END;
+//
+
+DELIMITER ;
+
+
+
+------- Trigger para UPDATE -----
+
+DELIMITER //
+
+CREATE TRIGGER actualizar_fecha_modificacion_update
+AFTER UPDATE ON customer
+FOR EACH ROW
+BEGIN
+    UPDATE customer_plan
+    SET fecha_modificacion = NOW()
+    WHERE id_cliente = NEW.id_cliente;
+END;
+//
+
+DELIMITER ;
