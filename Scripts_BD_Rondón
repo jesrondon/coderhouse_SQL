@@ -1,53 +1,74 @@
+---- scripts de creacion del esquema ----
+
 --- creación del esquema de BD---
 CREATE DATABASE VenetTelecom;
 USE VenetTelecom;
 
 ----- Creación tabla Canal de activación y postventa ---
 
-CREATE TABLE Canal (
+CREATE TABLE canal (
     ID_Canal INT PRIMARY KEY,
-    Nombre_Canal VARCHAR(100)
+    Nombre_Canal VARCHAR(100),
+    descripcion VARCHAR(45)
 );
 
------ Creación Tabla de Planes y servicios de valor agregado
-CREATE TABLE PlanServicio (
-    ID_PlanServicio INT PRIMARY KEY,
+
+----- Creación tabla mediopor donde se activo al abonado ---
+
+CREATE TABLE atencion_agente (
+    ID_AtencionAgente INT PRIMARY KEY,
+    Tipo VARCHAR(50),
+    Nombre VARCHAR(100),
+    Ubicacion VARCHAR(255)
+);
+
+----- Creación tabla de planes y servicios ofrecidos ---- 
+
+CREATE TABLE plan_servicios (
+    ID_PlanServicio VARCHAR(10) PRIMARY KEY,
     Nombre_PlanServicio VARCHAR(100),
     Precio DECIMAL(10,2),
-    Duración VARCHAR(50),
-    Fecha_marcaje DATE
+    Duracion VARCHAR(50),
+    Fecha_marcaje DATE,
+    Status VARCHAR(20),
+    VIP_CODE INT,
+    Modalidad VARCHAR(20),
+    tecnologia VARCHAR(45)
 );
 
-------- Creación Tabla Customer
-CREATE TABLE Customer (
+------ Creación de tabla customer donde gusarda toda la informacion del abonado ----
+
+CREATE TABLE customer (
     ID_Cliente INT PRIMARY KEY,
     Nombre VARCHAR(100),
     Apellido VARCHAR(100),
+    Razon_Social VARCHAR(100),
     FechaNacimiento DATE,
-    Género VARCHAR(20),
+    DNI VARCHAR(45),
+    Genero VARCHAR(20),
     ID_Canal INT,
     Correo VARCHAR(255),
-    Teléfono VARCHAR(50),
+    Telefono VARCHAR(50),
     Direccion_facturacion VARCHAR(255),
     ID_AtencionAgente INT,
-    FOREIGN KEY (ID_Canal) REFERENCES Canal(ID_Canal),
-    FOREIGN KEY (ID_AtencionAgente) REFERENCES Atencion_Agente(ID_AtencionAgente)
+    VIP_CODE INT,
+    Fecha_activacion DATE,
+    Plan_contratado VARCHAR(45),
+    ID_Plan INT,
+    Fecha_planServicio DATE,
+    renta_mensual DECIMAL(10,2),
+    Estado_servicio VARCHAR(45),
+    FOREIGN KEY (ID_Canal) REFERENCES canal(ID_Canal),
+    FOREIGN KEY (ID_AtencionAgente) REFERENCES atencion_agente(ID_AtencionAgente)
 );
 
---------- Creación 
-CREATE TABLE Atencion_Agente (
-    ID_AtencionAgente INT PRIMARY KEY,
-    Tipo VARCHAR(50), -- 'Centro' o 'Agente'
-    Nombre VARCHAR(100),
-    Ubicacion VARCHAR(255) -- Solo aplicable si es Centro de Atención
-);
+------ Creacion Tabla custormer Plan que es un historico para los planes que tenga el cliente -------
 
--------- Creacion Tabla Customer y PlanServicio
-
-CREATE TABLE Customer_Plan (
+CREATE TABLE customer_plan (
     ID_Cliente INT,
-    ID_PlanServicio INT,
+    ID_PlanServicio VARCHAR(10),
+    fecha_modificacion DATE,
     PRIMARY KEY (ID_Cliente, ID_PlanServicio),
-    FOREIGN KEY (ID_Cliente) REFERENCES Customer(ID_Cliente),
-    FOREIGN KEY (ID_PlanServicio) REFERENCES PlanServicio(ID_PlanServicio)
+    FOREIGN KEY (ID_Cliente) REFERENCES customer(ID_Cliente),
+    FOREIGN KEY (ID_PlanServicio) REFERENCES plan_servicios(ID_PlanServicio)
 );
