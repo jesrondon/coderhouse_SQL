@@ -1,26 +1,83 @@
------- insert customer_plan ------
-INSERT INTO `venettelecom`.`customer_plan` (`ID_Cliente`, `ID_PlanServicio`) VALUES (1, 1);
+use venettelecom;
 
---- insert  canal ------
-INSERT INTO canal values ('1','IVR','Llamada telefonica/ Canal telefonico')
-INSERT INTO canal values ('2','portalweb','Pagina Web');
-INSERT INTO canal values ('3','APP','Aplicación Movil');
-INSERT INTO canal values ('4','CHAT_BOOT','Chat  basado en IA');
-INSERT INTO canal values ('5','CRM','Sistemas de Atencion al cliente');
+select *  from atencion_agente;
+---- Insertar datos  tabla atencion_agente ---
+--- Dicha tabla guadara todo lo relacionado a los  centros de atencion de la empresa venettelecom 
+insert into atencion_agente values (1,'Agente Autorizado','Supernova 2000','La castellana Altamira');
+insert into atencion_agente values (2,'Centro de Atencion Integral','La castellana','La castellana Altamira,torre bancrecer');
 
------ insert atencion_agente ---------
-INSERT INTO `venettelecom`.`atencion_agente` (`ID_AtencionAgente`, `Tipo`, `Nombre`, `Ubicacion`) VALUES (NULL, NULL, NULL, NULL);
+use venettelecom;
+select * from canal;
 
-------- insert plan_servicios-------
-insert INTO plan_servicios values ('','Noches_A_1000','150.50','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
-insert INTO plan_servicios values ('3','Inteligente_500MB','33.02','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
-insert INTO plan_servicios values ('4','Conectados_2GB','135.24','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
-insert INTO plan_servicios values ('5','Conectados_6GB','218.58999','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
-insert INTO plan_servicios values ('6','Conectados_12GB','437.19','','2024-04-01','Activo','11','Prepago-postpago','2G/3G/4G LTE');
-insert INTO plan_servicios values ('7','Empresas_2GB','135.24','','2024-04-01','Activo','51','postpago','2G/3G/4G LTE');
-insert INTO plan_servicios values ('8','Empresas_6GB','218.58999','','2024-04-01','Activo','51','postpago','2G/3G/4G LTE');
-insert INTO plan_servicios values ('9','Empresas_12GB','437.19','','2024-04-01','Activo','51','postpago','2G/3G/4G LTE');
+---- Insertar datos  tabla canal ---
+--- Dicha tabla guadara todo lo relacionado a los canales digitales para atender a los usuarios.
 
------ insert customer --- 
 
-insert INTO customer values ('1','Jesús Elias','Rondón Rivas','1988-04-21','Masculino','1','respaldodigitel@gmail.com','+5804142598784','Esquina pescador a cochera torre 997 piso 10 apartamento 03','1','11');
+insert into canal values (1,'IVR','Llamada telefonica/ Canal telefonico');
+insert into canal values (2,'portalweb','Pagina Web'); 
+insert into canal values (3,'APP','Aplicación Movil'); 
+insert into canal values (4,'CHAT_BOOT','Chat  basado en IA'); 
+insert into canal values (5,'CRM','Sistemas de Atencion al cliente'); 
+
+use venettelecom;
+select * from customer;
+
+---- Insertar datos  tabla customer ---
+--- Dicha tabla guadara todo lo relacionado con los abonados que posee la operadora venettelecom---
+
+insert into customer values (1,'Jesús Elias','Rondón Rivas','','1988-04-21','V18913128','Masculino','1','respaldodigitel@gmail.com','+5804142598784','Esquina pescador a cochera torre 997 piso 10 apartamento 03','1','11','2010-05-01','Basico_Plus','1','26.25','A');
+insert into customer values (2,'Jesús Eduardo','Rivas','','1993-04-21','V20155304','Masculino','1','edu2010@gmail.com','+5804162100717','propatria torre florencia','1','11','2022-05-01','Noches_A_1000','1','150.50','A');
+insert into customer values (3,'Ivelice del Valle','Rivas Brito','','1960-04-21','V5896969','Femenino','1','respaldodigitel@gmail.com','+5804142598784','Esquina pescador a cochera torre 997 piso 10 apartamento 03','1','11','2010-05-01','Inteligente_500MB','1','33.02','A');
+insert into customer values (4,'Dayenni Pamela','Rivas Guzman','','1990-03-18','V20155305','Femenino','1','PMG2010@gmail.com','+584166210355','Cabudare casa Nº 01','1','11','2012-12-01','Conectados_2GB','1','135.24','A');
+insert into customer values (5,'Jhanet Bruna','Rivas Brito','','1963-08-10','V5896746','Femenino','1','Jbruna2005@gmail.com','+5804140831476','Guayacan Sucre  guiria casa N10','1','11','1998-12-01','Conectados_2GB','1','26.25','A');
+insert into customer values (6,'Elizabeth','Miranda','','1958-04-21','V5896967','Famenino','1','tortumiranda@gmail.com','+5802124846963','Esquina pescador a cochera torre 997 piso 10 apartamento 04','1','11','2015-05-01','Conectados_12GB','1','437.19','A');
+insert into customer values (7,'','','2JER','2023-04-21','J00058969','Masculino','1','2JER2023@gmail.com','+5804160200656','Esquina claero a chimborazo local 2 y 3','2','51','2010-05-01','Empresas_2GB','1','135.24','A');
+insert into customer values (8,'','','Clinicas Caracas','1970-04-21','J00058979','NA','1','clinicascaracas@gmail.com','+5804142598783','san bernardino Caracas','2','54','2010-11-01','Empresas_12GB','1','437.19','A');
+insert into customer values (9,'','','Laboratorio alquimia','1950-04-21','J00058589','NA','1','LBalquimia@gmail.com','+5804142598785','Torre Luxo Las Mercedes Miranda','2','52','2010-05-01','Empresas_6GB','1','218.59','A');
+insert into customer values (10,'Jesús Rodolfo','Mejias','','1988-04-21','V20563971','Masculino','1','rodolmejias@gmail.com','+5804142598784','La  castellana torre esmeralda piso 11-04','1','111','2010-05-01','Basico_Plus','1','26.25','A');
+insert into customer values (11,'Kenton Alexander','Miranda','','1994-04-21','V21155303','Masculino','1','KENT2010@gmail.com','+5804142598784','Esquina entre pescador y cochera torre el naranjal, capuchinos','10','11','2017-05-01','Fibra5G','1','1200.00','A');
+insert into customer values (12,'','','Creaciones infolab','2000-03-15','J20563971','NA','1','Infolab@gmail.com','+5804142598784','Parque cristal torre sur piso 10 focinas 1,2,3 y 4','1','52','2010-05-01','Fibra5G_empresas','11','2500.00','A');
+
+use venettelecom;
+select * from plan_servicios;
+
+---- Insertar datos  tabla plan_servicios ---
+--- Dicha tabla guadara todo lo relacionado con los Planes comerciales--
+
+insert into plan_servicios values (1,'Basico_Plus','26.25','','2025-07-01','Activo','11','Prepago-postpago','2G/3G/4G_LTE');
+insert into plan_servicios values (2,'Noches_A_1000','150.50','','2025/07/01','Activo','11','Prepago-postpago','2G/3G/4G_LTE');
+insert into plan_servicios values (3,'Inteligente_500MB','33.02','','2025/07/01','Activo','11','Prepago-postpago','2G/3G/4G_LTE');
+insert into plan_servicios values (4,'Conectados_2GB','135.24','','2025/07/01','Activo','11','Prepago-postpago','2G/3G/4G_LTE');
+insert into plan_servicios values (5,'Conectados_6GB','218.59','','2025/07/01','Activo','11','Prepago-postpago','2G/3G/4G_LTE');
+insert into plan_servicios values (6,'Conectados_12GB','437.19','','2025/07/01','Activo','11','Prepago-postpago','2G/3G/4G_LTE');
+insert into plan_servicios values (7,'Empresas_2GB','135.24','','2025/07/01','Activo','51','postpago','2G/3G/4G_LTE');
+insert into plan_servicios values (8,'Empresas_6GB','218.59','','2025/07/01','Activo','51','postpago','2G/3G/4G_LTE');
+insert into plan_servicios values (9,'Empresas_12GB','437.19','','2025/07/01','Activo','51','postpago','2G/3G/4G_LTE');
+insert into plan_servicios values (10,'Fibra5G','1200.00','','2025/07/01','Activo','11','postpago','5G');
+insert into plan_servicios values (11,'Fibra5G_empresas','2500.00','','2025/07/01','Activo','51','postpago','5G');
+
+use venettelecom;
+
+select * from customer_plan;
+SELECT 
+  cp.id_cliente,
+  cp.id_planservicio AS plan_actual,
+  c.id_plan AS plan_nuevo,
+  p.Nombre_PlanServicio
+FROM customer_plan cp
+JOIN customer c ON cp.id_cliente = c.id_cliente
+JOIN plan_servicios p ON c.id_plan = p.ID_PlanServicio
+WHERE cp.id_cliente > 0;
+
+
+------
+INSERT INTO customer_plan (id_cliente, id_planservicio)
+SELECT c.id_cliente, c.id_plan
+FROM customer c
+INNER JOIN plan_servicios p
+  ON c.id_plan = p.ID_PlanServicio;
+  
+UPDATE customer_plan cp
+JOIN customer c ON cp.id_cliente = c.id_cliente
+JOIN plan_servicios p ON c.id_plan = p.ID_PlanServicio
+SET cp.id_planservicio = c.id_plan;
