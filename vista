@@ -1,0 +1,50 @@
+use venettelecom;
+
+------ vistas del canal con más activaciones  ----
+
+
+CREATE VIEW vista_activaciones_por_canal AS
+SELECT ca.Nombre_Canal, COUNT(cu.id_cliente) AS total_activaciones
+FROM canal ca
+JOIN customer cu ON ca.ID_Canal = cu.ID_Canal
+GROUP BY ca.Nombre_Canal
+ORDER BY total_activaciones DESC;
+
+--- consulta de la vista -----
+SELECT * FROM vista_activaciones_por_canal LIMIT 1;
+
+------- vista para saber el canal de atencion virtual con más recaudación -----
+
+CREATE VIEW vista_renta_por_canal AS
+SELECT 
+    ca.Nombre_Canal,
+    COUNT(cu.id_cliente) AS total_clientes,
+    SUM(cu.renta_mensual) AS renta_total_mensual,
+    SUM(cu.renta_mensual) * 12 AS renta_total_anual
+FROM canal ca
+JOIN customer cu ON ca.ID_Canal = cu.ID_Canal
+WHERE cu.Estado_servicio = 'A'
+GROUP BY ca.Nombre_Canal
+ORDER BY renta_total_anual DESC;
+
+--- consulta de la vista ----
+
+SELECT * FROM vista_renta_por_canal LIMIT 1;
+
+
+------ consulta de rentas por tecnologia --------
+
+CREATE VIEW vista_renta_por_tecnologia AS
+SELECT 
+    ps.tecnologia,
+    COUNT(cu.id_cliente) AS total_clientes,
+    SUM(cu.renta_mensual) AS renta_total_mensual,
+    SUM(cu.renta_mensual) * 12 AS renta_total_anual
+FROM plan_servicios ps
+JOIN customer cu ON cu.id_plan = ps.ID_PlanServicio
+WHERE cu.Estado_servicio = 'A'
+GROUP BY ps.tecnologia
+ORDER BY renta_total_anual DESC;
+
+----- consulta de la vista -----
+SELECT * FROM vista_renta_por_tecnologia LIMIT 1
