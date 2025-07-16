@@ -1,0 +1,49 @@
+use venettelecom;
+
+
+---- PROCEDURE informacion completa del cliente con canal y plan ----
+
+DELIMITER //
+CREATE PROCEDURE obtener_detalle_cliente(IN cliente_id INT)
+BEGIN
+    SELECT 
+        cu.id_cliente,
+        cu.nombre,
+        cu.apellido,
+        cu.plan_contratado,
+        ps.Nombre_PlanServicio,
+        ps.tecnologia,
+        ca.Nombre_Canal,
+        ca.Tipo_Canal,
+        cu.renta_mensual,
+        cu.fecha_activacion,
+        cp.fecha_modificacion
+    FROM customer cu
+    JOIN plan_servicios ps ON cu.id_plan = ps.ID_PlanServicio
+    JOIN canal ca ON cu.ID_Canal = ca.ID_Canal
+    LEFT JOIN customer_plan cp ON cu.id_cliente = cp.id_cliente
+    WHERE cu.id_cliente = cliente_id;
+END;
+//
+
+DELIMITER ;
+
+------- PROCEDURE ingresos agrupados por canal y tecnoliga ----
+DELIMITER //
+CREATE PROCEDURE renta_por_tecnologia()
+BEGIN
+    SELECT 
+        ca.Nombre_Canal,
+        ps.tecnologia,
+        COUNT(cu.id_cliente) AS total_clientes,
+        SUM(cu.renta_mensual) AS renta_mensual_total,
+        SUM(cu.renta_mensual) * 12 AS renta_anual_total
+    FROM customer cu
+    JOIN canal ca ON cu.ID_Canal = ca.ID_Canal
+    JOIN plan_servicios ps ON cu.id_plan = ps.ID_PlanServicio
+    WHERE cu.Estado_servicio = 'A'
+    GROUP BY ca.Nombre_Canal, ps.tecnologia
+    ORDER BY renta_anual_total DESC;
+END;
+//
+DELIMITER ;
