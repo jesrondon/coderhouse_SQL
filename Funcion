@@ -1,0 +1,46 @@
+use venettelecom;
+------- Funcion para Saber cuántos días han pasado desde que un cliente fue activado ------
+DELIMITER //
+
+CREATE FUNCTION calcular_antiguedad_cliente(fecha DATE)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE dias INT;
+    SET dias = DATEDIFF(CURDATE(), fecha);
+    RETURN dias;
+END;
+//
+
+DELIMITER ;
+
+---- consulta para la funcion -----
+
+SELECT id_cliente, nombre, razon_social, calcular_antiguedad_cliente(fecha_activacion) AS antiguedad_dias
+FROM customer
+WHERE Estado_servicio = 'A';
+
+------ funcion para saber lo recaudado en el ultimo año por concepto de planes y servicios -----
+
+DELIMITER //
+
+CREATE FUNCTION total_renta_anual()
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    DECLARE total DECIMAL(10,2);
+
+    SELECT SUM(renta_mensual) * 12
+    INTO total
+    FROM customer
+    WHERE fecha_activacion <= CURDATE()
+      AND fecha_activacion >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+      AND Estado_servicio = 'A'; -- Asumiendo 'A' es activo
+
+    RETURN total;
+END;
+//
+
+---- consulta para la funcion -------
+
+SELECT total_renta_anual() AS renta_recaudada_en_el_ultimo_año;
