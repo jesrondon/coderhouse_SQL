@@ -14,7 +14,7 @@ BEGIN
         ps.Nombre_PlanServicio,
         ps.tecnologia,
         ca.Nombre_Canal,
-        ca.Tipo_Canal,
+        ca.descripcion AS Tipo_Canal, -- ← reemplazo aquí
         cu.renta_mensual,
         cu.fecha_activacion,
         cp.fecha_modificacion
@@ -25,8 +25,11 @@ BEGIN
     WHERE cu.id_cliente = cliente_id;
 END;
 //
-
 DELIMITER ;
+
+CALL obtener_detalle_cliente(11);
+
+
 
 ------- PROCEDURE ingresos agrupados por canal y tecnoliga ----
 DELIMITER //
@@ -47,3 +50,58 @@ BEGIN
 END;
 //
 DELIMITER ;
+call renta_por_tecnologia;
+
+---------- Procedure para verificar cuando se realice un select a la tabla  customer donde el mismo sera insertado en la tabla "log_customer_activity" para efectos de auditoria -----
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_consultar_cliente(IN p_ID_Cliente INT)
+BEGIN
+    -- Registrar acceso
+    INSERT INTO log_customer_activity (
+        Tipo_Accion, Fecha, Usuario, ID_Cliente, Detalle
+    )
+    VALUES (
+        'SELECT',
+        NOW(),
+        CURRENT_USER(),
+        p_ID_Cliente,
+        'Consulta de datos del cliente'
+    );
+
+    -- Retornar datos del cliente
+    SELECT *
+    FROM customer
+    WHERE ID_Cliente = p_ID_Cliente;
+END $$
+
+DELIMITER ;
+call sp_consultar_cliente(10);
+
+---- consulta para llamar a la funcion:  sp_consultar_cliente ---
+
+CALL sp_consultar_cliente(11);
+
+------ Funcion para validar que la region y el estado esten bien creados ---- 
+DELIMITER $$
+
+CREATE PROCEDURE validar_region_estado (
+    IN p_ID_Estado INT,
+    IN p_ID_Region INT
+)
+BEGIN
+    DECLARE region_valida INT;
+
+    SELECT COUNT(*) INTO region_valida
+    FROM estado
+    WHERE ID_Estado = p_ID_Estado AND ID_Region = p_ID_Region;
+
+    IF region_valida = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error: El estado no pertenece a la región especificada.';
+    END IF;
+END$$
+
+DELIMITER ;
+
