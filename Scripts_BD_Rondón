@@ -72,3 +72,33 @@ CREATE TABLE customer_plan (
     FOREIGN KEY (ID_Cliente) REFERENCES customer(ID_Cliente),
     FOREIGN KEY (ID_PlanServicio) REFERENCES plan_servicios(ID_PlanServicio)
 );
+
+---- Creacion Tabla para mantener un registro de quien modifico algun patametro dentro de la tabla customer ---
+CREATE TABLE log_customer_activity (
+    ID_Log INT AUTO_INCREMENT PRIMARY KEY,
+    Tipo_Accion ENUM('SELECT', 'UPDATE', 'DELETE','INSERT') NOT NULL,
+    Fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Usuario VARCHAR(100),
+    ID_Cliente INT,
+    Nombre VARCHAR(100),
+    Apellido VARCHAR(100),
+    DNI VARCHAR(45),
+    Correo VARCHAR(255),
+    Telefono VARCHAR(50),
+    Detalle TEXT
+);
+
+---- Creacion Tabla para guardar la region del cliente basado en la distribucion del mapa por el regulador CONATEL-----
+CREATE TABLE region (
+    ID_Region INT PRIMARY KEY,
+    Nombre_Region VARCHAR(100) NOT NULL
+);
+
+---- Creacion Tabla para guardar el estado asociado a la region y asi saber de donde puede ser el cliente captado, basado en la dieccion de facturacion-----
+CREATE TABLE estado (
+    ID_Estado INT PRIMARY KEY,
+    Nombre_Estado VARCHAR(100) NOT NULL,
+    ID_Region INT NOT NULL,
+    FOREIGN KEY (ID_Region) REFERENCES region(ID_Region)
+);
+
