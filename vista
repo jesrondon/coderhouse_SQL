@@ -11,7 +11,7 @@ GROUP BY ca.Nombre_Canal
 ORDER BY total_activaciones DESC;
 
 --- consulta de la vista -----
-SELECT * FROM vista_activaciones_por_canal LIMIT 1;
+SELECT * FROM vista_activaciones_por_canal LIMIT 3;
 
 ------- vista para saber el canal de atencion virtual con más recaudación -----
 
@@ -29,7 +29,7 @@ ORDER BY renta_total_anual DESC;
 
 --- consulta de la vista ----
 
-SELECT * FROM vista_renta_por_canal LIMIT 1;
+SELECT * FROM vista_renta_por_canal LIMIT 2;
 
 
 ------ consulta de rentas por tecnologia --------
@@ -47,4 +47,43 @@ GROUP BY ps.tecnologia
 ORDER BY renta_total_anual DESC;
 
 ----- consulta de la vista -----
-SELECT * FROM vista_renta_por_tecnologia LIMIT 1
+SELECT * FROM vista_renta_por_tecnologia LIMIT 2
+
+--- vistas para el monitoreo de tabla de logs ----
+
+CREATE OR REPLACE VIEW vista_logs_customer AS
+SELECT
+    Tipo_Accion,
+    Fecha,
+    Usuario,
+    ID_Cliente,
+    CASE
+        WHEN Razon_Social IS NOT NULL AND Razon_Social != ''
+            THEN Razon_Social
+        ELSE CONCAT(Nombre, ' ', Apellido)
+    END AS Nombre_Cliente,
+    DNI,
+    Correo,
+    Telefono,
+    Detalle
+FROM log_customer_activity
+ORDER BY Fecha DESC;
+
+--- consulta de la vista ----
+
+select * from  vista_logs_customer;
+
+------- vista que agrupa los clientes por región y cuenta cuántos tienen activación registrada. ------
+CREATE OR REPLACE VIEW vista_region_mas_activada AS
+SELECT
+    r.ID_Region,
+    r.Nombre_Region,
+    COUNT(c.ID_Cliente) AS total_activaciones
+FROM region r
+JOIN customer c ON c.ID_Region = r.ID_Region
+WHERE c.Fecha_activacion IS NOT NULL
+GROUP BY r.ID_Region, r.Nombre_Region
+ORDER BY total_activaciones DESC;
+
+--- consultar la vista ---
+SELECT * FROM vista_region_mas_activada;
