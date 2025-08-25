@@ -10,17 +10,15 @@ CREATE TRIGGER actualizar_fecha_modificacion_insert
 AFTER INSERT ON customer
 FOR EACH ROW
 BEGIN
-    UPDATE customer_plan
-    SET fecha_modificacion = NOW()
-    WHERE id_cliente = NEW.id_cliente;
+    IF EXISTS (
+        SELECT 1 FROM customer_plan WHERE ID_Cliente = NEW.ID_Cliente
+    ) THEN
+        UPDATE customer_plan
+        SET Fecha_Modificacion = NOW()
+        WHERE ID_Cliente = NEW.ID_Cliente;
+    END IF;
 END;
 //
-
-DELIMITER ;
-
-
-
-------- Trigger para UPDATE -----
 
 DELIMITER //
 
@@ -28,74 +26,124 @@ CREATE TRIGGER actualizar_fecha_modificacion_update
 AFTER UPDATE ON customer
 FOR EACH ROW
 BEGIN
-    UPDATE customer_plan
-    SET fecha_modificacion = NOW()
-    WHERE id_cliente = NEW.id_cliente;
+    IF EXISTS (
+        SELECT 1 FROM customer_plan WHERE ID_Cliente = NEW.ID_Cliente
+    ) THEN
+        UPDATE customer_plan
+        SET Fecha_Modificacion = NOW()
+        WHERE ID_Cliente = NEW.ID_Cliente;
+    END IF;
 END;
 //
 
 DELIMITER ;
 
-------- Trigger para insert ----
+
+
+
+------- Trigger para UPDATE -----
 
 CREATE TRIGGER trg_customer_insert
 AFTER INSERT ON customer
 FOR EACH ROW
-INSERT INTO log_customer_activity (
-    Tipo_Accion, Fecha, Usuario, ID_Cliente, Nombre, Apellido, DNI, Correo, Telefono, Detalle
-)
-VALUES (
-    'INSERT',
-    NOW(),
-    CURRENT_USER(),
-    NEW.ID_Cliente,
-    NEW.Nombre,
-    NEW.Apellido,
-    NEW.Razon_Social,
-    NEW.DNI,
-    NEW.Correo,
-    NEW.Telefono,
-    'Nuevo cliente registrado'
-);
+BEGIN
+    INSERT INTO log_customer_activity (
+        Tipo_Accion, Fecha, Usuario, ID_Cliente, Nombre, Apellido, DNI, Correo, Telefono, Detalle
+    )
+    VALUES (
+        'INSERT',
+        NOW(),
+        CURRENT_USER(),
+        NEW.ID_Cliente,
+        NEW.Nombre,
+        NEW.Apellido,
+        NEW.DNI,
+        NEW.Correo,
+        NEW.Telefono,
+        'Nuevo cliente registrado'
+    );
+END;
+
+
+------- Trigger para insert ----
+
+DELIMITER //
+
+CREATE TRIGGER trg_customer_insert
+AFTER INSERT ON customer
+FOR EACH ROW
+BEGIN
+    INSERT INTO log_customer_activity (
+        Tipo_Accion, Fecha, Usuario, ID_Cliente, Nombre, Apellido, DNI, Correo, Telefono, Detalle
+    )
+    VALUES (
+        'INSERT',
+        NOW(),
+        CURRENT_USER(),
+        NEW.ID_Cliente,
+        NEW.Nombre,
+        NEW.Apellido,
+        NEW.DNI,
+        NEW.Correo,
+        NEW.Telefono,
+        'Nuevo cliente registrado'
+    );
+END;
+//
+
+DELIMITER ;
+
 
 
 ------- Trigger para DELETE ----
+DELIMITER //
+
 CREATE TRIGGER trg_customer_delete
 AFTER DELETE ON customer
 FOR EACH ROW
-INSERT INTO log_customer_activity (
-    Tipo_Accion, Fecha, Usuario, ID_Cliente, Nombre, Apellido, DNI, Correo, Telefono, Detalle
-)
-VALUES (
-    'DELETE',
-    NOW(),
-    CURRENT_USER(),
-    OLD.ID_Cliente,
-    OLD.Nombre,
-    OLD.Apellido,
-    OLD.DNI,
-    OLD.Correo,
-    OLD.Telefono,
-    'Registro eliminado'
-);
+BEGIN
+    INSERT INTO log_customer_activity (
+        Tipo_Accion, Fecha, Usuario, ID_Cliente, Nombre, Apellido, DNI, Correo, Telefono, Detalle
+    )
+    VALUES (
+        'DELETE',
+        NOW(),
+        CURRENT_USER(),
+        OLD.ID_Cliente,
+        OLD.Nombre,
+        OLD.Apellido,
+        OLD.DNI,
+        OLD.Correo,
+        OLD.Telefono,
+        'Registro eliminado'
+    );
+END;
+//
+
+DELIMITER ;
+
+
+
 
 ----- creacion de los Triggers para la tabla customer ------ 
 
-DELIMITER $$
+DELIMITER //
 
 CREATE TRIGGER validar_customer_insert
 BEFORE INSERT ON customer
 FOR EACH ROW
 BEGIN
     CALL validar_region_estado(NEW.ID_Estado, NEW.ID_Region);
-END$$
+END;
+//
 
 CREATE TRIGGER validar_customer_update
 BEFORE UPDATE ON customer
 FOR EACH ROW
 BEGIN
     CALL validar_region_estado(NEW.ID_Estado, NEW.ID_Region);
-END$$
+END;
+//
 
 CREATE TRIGGER validar_customer_delete
 BEFORE DELETE ON customer
@@ -105,42 +153,29 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Error: No se puede eliminar un cliente VIP.';
     END IF;
-END$$
+END;
+//
 
 DELIMITER ;
 
 ----- creacion de los Triggers para la tabla atencion_agente ------ 
 
-DELIMITER $$
+DELIMITER //
 
-CREATE TRIGGER validar_agente_insert
+CREATE TRIGGER validar_agente_region_insert
 BEFORE INSERT ON atencion_agente
 FOR EACH ROW
 BEGIN
     CALL validar_region_estado(NEW.ID_Estado, NEW.ID_Region);
-END$$
+END;
+//
 
-CREATE TRIGGER validar_agente_update
+CREATE TRIGGER validar_agente_region_update
 BEFORE UPDATE ON atencion_agente
 FOR EACH ROW
 BEGIN
     CALL validar_region_estado(NEW.ID_Estado, NEW.ID_Region);
-END$$
-
-CREATE TRIGGER validar_agente_delete
-BEFORE DELETE ON atencion_agente
-FOR EACH ROW
-BEGIN
-    DECLARE clientes_asociados INT;
-
-    SELECT COUNT(*) INTO clientes_asociados
-    FROM customer
-    WHERE ID_AtencionAgente = OLD.ID_AtencionAgente;
-
-    IF clientes_asociados > 0 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Error: No se puede eliminar un agente con clientes asociados.';
-    END IF;
-END$$
+END;
+//
 
 DELIMITER ;
