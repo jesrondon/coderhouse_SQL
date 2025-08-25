@@ -4,27 +4,29 @@ use venettelecom;
 ---- PROCEDURE informacion completa del cliente con canal y plan ----
 
 DELIMITER //
+
 CREATE PROCEDURE obtener_detalle_cliente(IN cliente_id INT)
 BEGIN
     SELECT 
-        cu.id_cliente,
-        cu.nombre,
-        cu.apellido,
-        cu.plan_contratado,
+        cu.ID_Cliente,
+        cu.Nombre,
+        cu.Apellido,
+        cu.Plan_contratado,
         ps.Nombre_PlanServicio,
-        ps.tecnologia,
+        ps.Tecnologia,
         ca.Nombre_Canal,
-        ca.descripcion AS Tipo_Canal, -- ← reemplazo aquí
-        cu.renta_mensual,
-        cu.fecha_activacion,
-        cp.fecha_modificacion
+        ca.Descripcion AS Tipo_Canal,
+        cu.Renta_Mensual,
+        cu.Fecha_activacion,
+        cp.Fecha_Modificacion
     FROM customer cu
-    JOIN plan_servicios ps ON cu.id_plan = ps.ID_PlanServicio
+    JOIN plan_servicios ps ON cu.ID_PlanServicio = ps.ID_PlanServicio
     JOIN canal ca ON cu.ID_Canal = ca.ID_Canal
-    LEFT JOIN customer_plan cp ON cu.id_cliente = cp.id_cliente
-    WHERE cu.id_cliente = cliente_id;
+    LEFT JOIN customer_plan cp ON cu.ID_Cliente = cp.ID_Cliente
+    WHERE cu.ID_Cliente = cliente_id;
 END;
 //
+
 DELIMITER ;
 
 CALL obtener_detalle_cliente(11);
@@ -33,23 +35,26 @@ CALL obtener_detalle_cliente(11);
 
 ------- PROCEDURE ingresos agrupados por canal y tecnoliga ----
 DELIMITER //
+
 CREATE PROCEDURE renta_por_tecnologia()
 BEGIN
     SELECT 
         ca.Nombre_Canal,
-        ps.tecnologia,
-        COUNT(cu.id_cliente) AS total_clientes,
-        SUM(cu.renta_mensual) AS renta_mensual_total,
-        SUM(cu.renta_mensual) * 12 AS renta_anual_total
+        ps.Tecnologia,
+        COUNT(cu.ID_Cliente) AS total_clientes,
+        SUM(cu.Renta_Mensual) AS renta_mensual_total,
+        SUM(cu.Renta_Mensual) * 12 AS renta_anual_total
     FROM customer cu
     JOIN canal ca ON cu.ID_Canal = ca.ID_Canal
-    JOIN plan_servicios ps ON cu.id_plan = ps.ID_PlanServicio
+    JOIN plan_servicios ps ON cu.ID_PlanServicio = ps.ID_PlanServicio
     WHERE cu.Estado_servicio = 'A'
-    GROUP BY ca.Nombre_Canal, ps.tecnologia
+    GROUP BY ca.Nombre_Canal, ps.Tecnologia
     ORDER BY renta_anual_total DESC;
 END;
 //
+
 DELIMITER ;
+
 call renta_por_tecnologia;
 
 ---------- Procedure para verificar cuando se realice un select a la tabla  customer donde el mismo sera insertado en la tabla "log_customer_activity" para efectos de auditoria -----
@@ -58,7 +63,6 @@ DELIMITER $$
 
 CREATE PROCEDURE sp_consultar_cliente(IN p_ID_Cliente INT)
 BEGIN
-    -- Registrar acceso
     INSERT INTO log_customer_activity (
         Tipo_Accion, Fecha, Usuario, ID_Cliente, Detalle
     )
@@ -70,13 +74,13 @@ BEGIN
         'Consulta de datos del cliente'
     );
 
-    -- Retornar datos del cliente
     SELECT *
     FROM customer
     WHERE ID_Cliente = p_ID_Cliente;
-END $$
+END$$
 
 DELIMITER ;
+
 call sp_consultar_cliente(10);
 
 ---- consulta para llamar a la funcion:  sp_consultar_cliente ---
@@ -104,4 +108,30 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+---- consulta para llamar a la funcion:  clasificar_antiguedad_cliente ---
+
+DELIMITER //
+
+CREATE PROCEDURE clasificar_antiguedad_cliente()
+BEGIN
+    SELECT 
+        ID_Cliente,
+        Nombre,
+        Apellido,
+        Fecha_activacion,
+        DATEDIFF(CURDATE(), Fecha_activacion) AS dias_activo,
+        CASE
+            WHEN DATEDIFF(CURDATE(), Fecha_activacion) < 180 THEN 'Nuevo'
+            WHEN DATEDIFF(CURDATE(), Fecha_activacion) BETWEEN 180 AND 730 THEN 'Intermedio'
+            ELSE 'Antiguo'
+        END AS categoria_antiguedad
+    FROM customer
+    WHERE Estado_servicio = 'A';
+END;
+//
+
+DELIMITER ;
+
+CALL clasificar_antiguedad_cliente
 
