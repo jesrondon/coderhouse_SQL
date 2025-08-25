@@ -6,19 +6,21 @@ CREATE FUNCTION calcular_antiguedad_cliente(fecha DATE)
 RETURNS INT
 DETERMINISTIC
 BEGIN
-    DECLARE dias INT;
-    SET dias = DATEDIFF(CURDATE(), fecha);
-    RETURN dias;
+    RETURN DATEDIFF(CURDATE(), fecha);
 END;
 //
 
 DELIMITER ;
 
+
 ---- consulta para la funcion -----
 
-SELECT id_cliente, nombre, razon_social, calcular_antiguedad_cliente(fecha_activacion) AS antiguedad_dias
+SELECT ID_Cliente, Nombre, Razon_Social,
+       calcular_antiguedad_cliente(Fecha_activacion) AS antiguedad_dias
 FROM customer
 WHERE Estado_servicio = 'A';
+
+
 
 ------ funcion para saber lo recaudado en el ultimo año por concepto de planes y servicios -----
 
@@ -30,16 +32,18 @@ DETERMINISTIC
 BEGIN
     DECLARE total DECIMAL(10,2);
 
-    SELECT SUM(renta_mensual) * 12
+    SELECT IFNULL(SUM(renta_mensual), 0) * 12
     INTO total
     FROM customer
-    WHERE fecha_activacion <= CURDATE()
-      AND fecha_activacion >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
-      AND Estado_servicio = 'A'; -- Asumiendo 'A' es activo
+    WHERE fecha_activacion BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND CURDATE()
+      AND Estado_servicio = 'A';
 
     RETURN total;
 END;
 //
+
+DELIMITER ;
+
 
 ---- consulta para la funcion -------
 
