@@ -2,16 +2,18 @@ use venettelecom;
 select * from region;
 
 --- insert generados para tabla region la cual esta amoldada al mapa de conatel en VENEZUELA ----
+INSERT INTO region (ID_Region, Nombre_Region)
+VALUES
+  (1, 'Capital'),
+  (2, 'Central'),
+  (3, 'Occidental'),
+  (4, 'Oriental'),
+  (5, 'Andes'),
+  (6, 'Guayana'),
+  (7, 'Llanos'),
+  (8, 'Insular') AS r
+ON DUPLICATE KEY UPDATE Nombre_Region = r.Nombre_Region;
 
-INSERT INTO region (ID_Region, Nombre_Region) VALUES
-(1, 'Capital'),
-(2, 'Central'),
-(3, 'Occidental'),
-(4, 'Oriental'),
-(5, 'Andes'),
-(6, 'Guayana'),
-(7, 'Llanos'),
-(8, 'Insular');
 
 
 -------- insert generados para tabla estado  la cual esta amoldada al mapa de conatel en VENEZUELA y sera usado tambien para reportes sobre estados segun la direccion de facturacion ----
@@ -40,15 +42,25 @@ INSERT INTO estado (ID_Estado, Nombre_Estado, ID_Region) VALUES
 (21, 'Barinas', 7),
 (22, 'Guárico', 7),
 (23, 'Portuguesa', 7),
-(24, 'Dependencias Federales', 8);
+(24, 'Dependencias Federales', 8)
+AS e
+ON DUPLICATE KEY UPDATE Nombre_Estado = e.Nombre_Estado, ID_Region = e.ID_Region;
 
 
 select *  from atencion_agente;
 ---- Insertar datos  tabla atencion_agente ---
 --- Dicha tabla guadara todo lo relacionado a los  centros de atencion de la empresa venettelecom 
-insert into atencion_agente values (1,'Agente Autorizado','Supernova 2000','La castellana Altamira','1','1');
-insert into atencion_agente values (2,'Centro de Atencion Integral','La castellana','La castellana Altamira,torre bancrecer','1','1');
-insert into atencion_agente values (3,'Agente Autorizado Integral','TelecomRondonasociadosCA','amazonas','18','6');
+INSERT INTO atencion_agente (ID_AtencionAgente, Tipo_Atencion, Nombre_Agente, Ubicacion,ID_Estado,ID_Region)
+VALUES
+  (1, 'Agente Autorizado', 'Supernova 2000', 'La castellana Altamira',1,1),
+  (2, 'Centro de Atencion Integral', 'La castellana', 'La castellana Altamira, torre Bancrecer',1,1),
+  (3, 'Agente Autorizado Integral', 'TelecomRondonasociadosCA', 'Amazonas',16,6)
+AS a
+ON DUPLICATE KEY UPDATE
+  Tipo_Atencion = a.Tipo_Atencion,
+  Nombre_Agente = a.Nombre_Agente,
+  Ubicacion = a.Ubicacion;
+
 
 select * from canal;
 
@@ -56,153 +68,173 @@ select * from canal;
 --- Dicha tabla guadara todo lo relacionado a los canales digitales para atender a los usuarios.
 
 
-insert into canal values (1,'IVR','Llamada telefonica/ Canal telefonico');
-insert into canal values (2,'portalweb','Pagina Web'); 
-insert into canal values (3,'APP','Aplicación Movil'); 
-insert into canal values (4,'CHAT_BOOT','Chat  basado en IA'); 
-insert into canal values (5,'CRM','Sistemas de Atencion al cliente'); 
+INSERT INTO canal (ID_Canal, Nombre_Canal, Descripcion)
+VALUES
+  (1, 'IVR', 'Llamada telefónica / Canal telefónico'),
+  (2, 'portalweb', 'Página Web'),
+  (3, 'APP', 'Aplicación Móvil'),
+  (4, 'CHAT_BOOT', 'Chat basado en IA'),
+  (5, 'CRM', 'Sistemas de Atención al Cliente')
+AS c
+ON DUPLICATE KEY UPDATE
+  Nombre_Canal = c.Nombre_Canal,
+  Descripcion = c.Descripcion;
+
 
 select * from plan_servicios;
 
 ---- Insertar datos  tabla plan_servicios ---
 --- Dicha tabla guadara todo lo relacionado con los Planes comerciales--
 
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (1, 'Basico_Plus', 26.25, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (2, 'Noches_A_1000', 150.50, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (3, 'Inteligente_500MB', 33.02, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (4, 'Conectados_2GB', 135.24, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (5, 'Conectados_6GB', 218.59, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (6, 'Conectados_12GB', 437.19, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (7, 'Empresas_2GB', 135.24, '', '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (8, 'Empresas_6GB', 218.59, '', '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (9, 'Empresas_12GB', 437.19, '', '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (10, 'Fibra5G', 1200.00, '', '2025-07-01', 'Activo', 11, 'postpago', '5G');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (11, 'Fibra5G_empresas', 2500.00, '', '2025-07-01', 'Activo', 51, 'postpago', '5G');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (12, 'Basico_Plus', 26.25, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (13, 'Basico_Plus', 26.25, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (14, 'Noches_A_1000', 150.50, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (15, 'Noches_A_1000', 150.50, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (16, 'Inteligente_500MB', 33.02, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (17, 'Inteligente_500MB', 33.02, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (18, 'Conectados_2GB', 135.24, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (19, 'Conectados_2GB', 135.24, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (20, 'Conectados_6GB', 218.59, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (21, 'Conectados_6GB', 218.59, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (22, 'Conectados_12GB', 437.19, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (23, 'Conectados_12GB', 437.19, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (24, 'Fibra5G', 1200.00, NULL, '2025-07-01', 'Activo', 111, 'postpago', '5G');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (25, 'Fibra5G', 1200.00, NULL, '2025-07-01', 'Activo', 99, 'postpago', '5G');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (26, 'Empresas_2GB', 135.24, NULL, '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (27, 'Empresas_2GB', 135.24, NULL, '2025-07-01', 'Activo', 52, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (28, 'Empresas_2GB', 135.24, NULL, '2025-07-01', 'Activo', 54, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (29, 'Empresas_6GB', 218.59, NULL, '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (30, 'Empresas_6GB', 218.59, NULL, '2025-07-01', 'Activo', 52, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (31, 'Empresas_6GB', 218.59, NULL, '2025-07-01', 'Activo', 54, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (32, 'Empresas_12GB', 437.19, NULL, '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (33, 'Empresas_12GB', 437.19, NULL, '2025-07-01', 'Activo', 52, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (34, 'Empresas_12GB', 437.19, NULL, '2025-07-01', 'Activo', 54, 'postpago', '2G/3G/4G_LTE');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (35, 'Fibra5G_empresas', 2500.00, NULL, '2025-07-01', 'Activo', 51, 'postpago', '5G');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (36, 'Fibra5G_empresas', 2500.00, NULL, '2025-07-01', 'Activo', 52, 'postpago', '5G');
-INSERT INTO plan_servicios (ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion, Fecha_marcaje, Status, VIP_CODE, Modalidad, tecnologia) VALUES (37, 'Fibra5G_empresas', 2500.00, NULL, '2025-07-01', 'Activo', 54, 'postpago', '5G');
+INSERT INTO plan_servicios (
+  ID_PlanServicio, Nombre_PlanServicio, Precio, Duracion,
+  Fecha_marcaje, Estado_Plan, VIP_CODE, Modalidad, tecnologia
+)
+VALUES
+  (1, 'Basico_Plus', 26.25, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (2, 'Noches_A_1000', 150.50, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (3, 'Inteligente_500MB', 33.02, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (4, 'Conectados_2GB', 135.24, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (5, 'Conectados_6GB', 218.59, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (6, 'Conectados_12GB', 437.19, '', '2025-07-01', 'Activo', 11, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (7, 'Empresas_2GB', 135.24, '', '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE'),
+  (8, 'Empresas_6GB', 218.59, '', '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE'),
+  (9, 'Empresas_12GB', 437.19, '', '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE'),
+  (10, 'Fibra5G', 1200.00, '', '2025-07-01', 'Activo', 11, 'postpago', '5G'),
+  (11, 'Fibra5G_empresas', 2500.00, '', '2025-07-01', 'Activo', 51, 'postpago', '5G'),
+  (12, 'Basico_Plus', 26.25, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (13, 'Basico_Plus', 26.25, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (14, 'Noches_A_1000', 150.50, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (15, 'Noches_A_1000', 150.50, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (16, 'Inteligente_500MB', 33.02, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (17, 'Inteligente_500MB', 33.02, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (18, 'Conectados_2GB', 135.24, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (19, 'Conectados_2GB', 135.24, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (20, 'Conectados_6GB', 218.59, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (21, 'Conectados_6GB', 218.59, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (22, 'Conectados_12GB', 437.19, NULL, '2025-07-01', 'Activo', 111, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (23, 'Conectados_12GB', 437.19, NULL, '2025-07-01', 'Activo', 99, 'Prepago-postpago', '2G/3G/4G_LTE'),
+  (24, 'Fibra5G', 1200.00, NULL, '2025-07-01', 'Activo', 111, 'postpago', '5G'),
+  (25, 'Fibra5G', 1200.00, NULL, '2025-07-01', 'Activo', 99, 'postpago', '5G'),
+  (26, 'Empresas_2GB', 135.24, NULL, '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE'),
+  (27, 'Empresas_2GB', 135.24, NULL, '2025-07-01', 'Activo', 52, 'postpago', '2G/3G/4G_LTE'),
+  (28, 'Empresas_2GB', 135.24, NULL, '2025-07-01', 'Activo', 54, 'postpago', '2G/3G/4G_LTE'),
+  (29, 'Empresas_6GB', 218.59, NULL, '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE'),
+  (30, 'Empresas_6GB', 218.59, NULL, '2025-07-01', 'Activo', 52, 'postpago', '2G/3G/4G_LTE'),
+  (31, 'Empresas_6GB', 218.59, NULL, '2025-07-01', 'Activo', 54, 'postpago', '2G/3G/4G_LTE'),
+  (32, 'Empresas_12GB', 437.19, NULL, '2025-07-01', 'Activo', 51, 'postpago', '2G/3G/4G_LTE'),
+  (33, 'Empresas_12GB', 437.19, NULL, '2025-07-01', 'Activo', 52, 'postpago', '2G/3G/4G_LTE'),
+  (34, 'Empresas_12GB', 437.19, NULL, '2025-07-01', 'Activo', 54, 'postpago', '2G/3G/4G_LTE'),
+  (35, 'Fibra5G_empresas', 2500.00, NULL, '2025-07-01', 'Activo', 51, 'postpago', '5G'),
+  (36, 'Fibra5G_empresas', 2500.00, NULL, '2025-07-01', 'Activo', 52, 'postpago', '5G'),
+  (37, 'Fibra5G_empresas', 2500.00, NULL, '2025-07-01', 'Activo', 54, 'postpago', '5G')
+AS p
+ON DUPLICATE KEY UPDATE
+  Nombre_PlanServicio = p.Nombre_PlanServicio,
+  Precio = p.Precio,
+  Duracion = p.Duracion,
+  Fecha_marcaje = p.Fecha_marcaje,
+  Estado_Plan = p.Estado_Plan,
+  VIP_CODE = p.VIP_CODE,
+  Modalidad = p.Modalidad,
+  tecnologia = p.tecnologia;
 
-select * from customer where apellido = 'rondón rivas' ;
-describe customer
-select * from plan_servicios where ID_PlanServicio = 11 ;
 
 ---- Insertar datos  tabla customer ---
 --- Dicha tabla guadara todo lo relacionado con los abonados que posee la operadora venettelecom---
 INSERT INTO customer (
-    ID_Cliente, Nombre, Apellido, Razon_Social, FechaNacimiento, DNI, Genero,
-    ID_Canal, Correo, Telefono, Direccion_facturacion,
-    ID_Region, ID_Estado, ID_AtencionAgente, VIP_CODE,
-    Fecha_activacion, Plan_contratado, ID_Plan, Fecha_planServicio,
-    renta_mensual, Estado_servicio
+  ID_Cliente, Nombre, Apellido, Razon_Social, FechaNacimiento, DNI, Genero,
+  ID_Canal, Correo, Telefono, Direccion_facturacion,
+  ID_Region, ID_Estado, ID_AtencionAgente, VIP_CODE,
+  Fecha_activacion, Plan_contratado, ID_PlanServicio, Fecha_planServicio,
+  renta_mensual, Estado_servicio
 )
 VALUES
--- Cliente natural
-(1, 'Carlos', 'González', NULL, '1985-06-15', 'V12345678', 'Masculino',
- 1, 'carlosg@gmail.com', '+5804121234567', 'Av. Bolívar, Edif. Sol, Piso 3',
- 1, 1, 1, 1001, '2021-01-10', 'Conectados_2GB', 2, '2021-01-10', 135.24, 'A'),
+  (1, 'Carlos', 'González', NULL, '1985-06-15', 'V12345678', 'Masculino',
+   1, 'carlosg@gmail.com', '+5804121234567', 'Av. Bolívar, Edif. Sol, Piso 3',
+   1, 1, 1, 1001, '2021-01-10', 'Conectados_2GB', 2, '2021-01-10', 135.24, 'A'),
 
--- Cliente natural
-(2, 'María', 'Fernández', NULL, '1992-09-22', 'V87654321', 'Femenino',
- 1, 'mfernandez@gmail.com', '+5804127654321', 'Calle Luna, Casa 45',
- 7, 21, 2, 1002, '2022-03-05', 'Fibra5G', 3, '2022-03-05', 1200.00, 'A'),
+  (2, 'María', 'Fernández', NULL, '1992-09-22', 'V87654321', 'Femenino',
+   1, 'mfernandez@gmail.com', '+5804127654321', 'Calle Luna, Casa 45',
+   7, 21, 2, 1002, '2022-03-05', 'Fibra5G', 3, '2022-03-05', 1200.00, 'A'),
 
--- Cliente jurídico (nombre genérico)
-(3, 'Soluciones', 'Globales', 'Soluciones Globales C.A.', '1975-12-01', 'J123456789', 'NA',
- 2, 'contacto@solglobal.com', '+5802125551234', 'Zona Industrial, Galpón 7',
- 3, 7, 3, 2001, '2020-07-20', 'Empresas_12GB', 4, '2020-07-20', 437.19, 'A'),
+  (3, 'Soluciones', 'Globales', 'Soluciones Globales C.A.', '1975-12-01', 'J123456789', 'NA',
+   2, 'contacto@solglobal.com', '+5802125551234', 'Zona Industrial, Galpón 7',
+   3, 7, 3, 2001, '2020-07-20', 'Empresas_12GB', 4, '2020-07-20', 437.19, 'A'),
 
--- Cliente jurídico (nombre genérico)
-(4, 'Distribuidora', 'El Ávila', 'Distribuidora El Ávila', '1980-05-10', 'J987654321', 'NA',
- 2, 'ventas@elavila.com', '+5802125559876', 'Av. Principal, Local 12',
- 1, 2, 1, 2002, '2019-11-30', 'Empresas_6GB', 5, '2019-11-30', 218.59, 'A'),
+  (4, 'Distribuidora', 'El Ávila', 'Distribuidora El Ávila', '1980-05-10', 'J987654321', 'NA',
+   2, 'ventas@elavila.com', '+5802125559876', 'Av. Principal, Local 12',
+   1, 2, 1, 2002, '2019-11-30', 'Empresas_6GB', 5, '2019-11-30', 218.59, 'A'),
 
--- Cliente natural
-(5, 'Luis', 'Martínez', NULL, '1990-02-28', 'V11223344', 'Masculino',
- 1, 'luismartinez@gmail.com', '+5804123344556', 'Urbanización La Floresta, Casa 8',
- 7, 22, 2, 1003, '2023-06-15', 'Basico_Plus', 6, '2023-06-15', 26.25, 'A'),
+  (5, 'Luis', 'Martínez', NULL, '1990-02-28', 'V11223344', 'Masculino',
+   1, 'luismartinez@gmail.com', '+5804123344556', 'Urbanización La Floresta, Casa 8',
+   7, 22, 2, 1003, '2023-06-15', 'Basico_Plus', 6, '2023-06-15', 26.25, 'A'),
 
--- Cliente natural
-(6, 'Ana', 'Torres', NULL, '1988-11-11', 'V55667788', 'Femenino',
- 1, 'ana.torres@gmail.com', '+5804126677889', 'Sector El Centro, Edif. Azul, Piso 2',
- 3, 8, 3, 1004, '2024-01-01', 'Inteligente_500MB', 7, '2024-01-01', 33.02, 'A'),
--- Cliente natural
-(7, 'José', 'Ramírez', NULL, '1983-04-12', 'V33445566', 'Masculino',
- 1, 'jramirez@gmail.com', '+5804123344556', 'Av. Sucre, Edif. Oro, Piso 1',
- 2, 4, 1, 1005, '2022-08-20', 'Conectados_2GB', 2, '2022-08-20', 135.24, 'A'),
+  (6, 'Ana', 'Torres', NULL, '1988-11-11', 'V55667788', 'Femenino',
+   1, 'ana.torres@gmail.com', '+5804126677889', 'Sector El Centro, Edif. Azul, Piso 2',
+   3, 8, 3, 1004, '2024-01-01', 'Inteligente_500MB', 7, '2024-01-01', 33.02, 'A'),
 
--- Cliente jurídico
-(8, 'Comercial', 'Andina', 'Comercial Andina S.A.', '1970-03-18', 'J223344556', 'NA',
- 2, 'info@andina.com', '+5802124445566', 'Zona Industrial Norte, Galpón 3',
- 4, 10, 2, 2003, '2021-05-12', 'Empresas_12GB', 4, '2021-05-12', 437.19, 'A'),
+  (7, 'José', 'Ramírez', NULL, '1983-04-12', 'V33445566', 'Masculino',
+   1, 'jramirez@gmail.com', '+5804123344556', 'Av. Sucre, Edif. Oro, Piso 1',
+   2, 4, 1, 1005, '2022-08-20', 'Conectados_2GB', 2, '2022-08-20', 135.24, 'A'),
 
--- Cliente natural
-(9, 'Patricia', 'López', NULL, '1995-07-30', 'V99887766', 'Femenino',
- 1, 'patylopez@gmail.com', '+5804129988776', 'Calle 5, Casa 22',
- 5, 14, 3, 1006, '2023-02-14', 'Fibra5G', 3, '2023-02-14', 1200.00, 'A'),
+  (8, 'Comercial', 'Andina', 'Comercial Andina S.A.', '1970-03-18', 'J223344556', 'NA',
+   2, 'info@andina.com', '+5802124445566', 'Zona Industrial Norte, Galpón 3',
+   4, 10, 2, 2003, '2021-05-12', 'Empresas_12GB', 4, '2021-05-12', 437.19, 'A'),
 
--- Cliente jurídico
-(10, 'Servicios', 'Tecnológicos', 'Servicios Tecno C.A.', '1982-09-09', 'J112233445', 'NA',
- 2, 'contacto@tecno.com', '+5802121122334', 'Av. Las Ciencias, Torre B',
- 6, 17, 1, 2004, '2020-10-01', 'Empresas_6GB', 5, '2020-10-01', 218.59, 'A'),
+  (9, 'Patricia', 'López', NULL, '1995-07-30', 'V99887766', 'Femenino',
+   1, 'patylopez@gmail.com', '+5804129988776', 'Calle 5, Casa 22',
+   5, 14, 3, 1006, '2023-02-14', 'Fibra5G', 3, '2023-02-14', 1200.00, 'A'),
 
--- Cliente natural
-(11, 'Ricardo', 'Mendoza', NULL, '1987-01-25', 'V66778899', 'Masculino',
- 1, 'rmendoza@gmail.com', '+5804126677889', 'Sector El Lago, Casa 9',
- 2, 5, 2, 1007, '2021-12-05', 'Basico_Plus', 6, '2021-12-05', 26.25, 'A'),
+  (10, 'Servicios', 'Tecnológicos', 'Servicios Tecno C.A.', '1982-09-09', 'J112233445', 'NA',
+   2, 'contacto@tecno.com', '+5802121122334', 'Av. Las Ciencias, Torre B',
+   6, 17, 1, 2004, '2020-10-01', 'Empresas_6GB', 5, '2020-10-01', 218.59, 'A'),
 
--- Cliente natural
-(12, 'Laura', 'Pérez', NULL, '1993-03-03', 'V44556677', 'Femenino',
- 1, 'laura.perez@gmail.com', '+5804124455667', 'Urbanización El Sol, Casa 3',
- 3, 9, 3, 1008, '2022-06-18', 'Inteligente_500MB', 7, '2022-06-18', 33.02, 'A'),
+  (11, 'Ricardo', 'Mendoza', NULL, '1987-01-25', 'V66778899', 'Masculino',
+   1, 'rmendoza@gmail.com', '+5804126677889', 'Sector El Lago, Casa 9',
+   2, 5, 2, 1007, '2021-12-05', 'Basico_Plus', 6, '2021-12-05', 26.25, 'A'),
 
--- Cliente jurídico
-(13, 'Distribuciones', 'Oriente', 'Distribuciones Oriente C.A.', '1978-11-11', 'J556677889', 'NA',
- 2, 'ventas@oriente.com', '+5802125566778', 'Av. Libertador, Local 5',
- 7, 20, 1, 2005, '2019-09-30', 'Empresas_12GB', 4, '2019-09-30', 437.19, 'A'),
+  (12, 'Laura', 'Pérez', NULL, '1993-03-03', 'V44556677', 'Femenino',
+   1, 'laura.perez@gmail.com', '+5804124455667', 'Urbanización El Sol, Casa 3',
+   3, 9, 3, 1008, '2022-06-18', 'Inteligente_500MB', 7, '2022-06-18', 33.02, 'A'),
 
--- Cliente natural
-(14, 'Gabriela', 'Moreno', NULL, '1991-10-10', 'V22334455', 'Femenino',
- 1, 'gmoreno@gmail.com', '+5804122233445', 'Calle 8, Edif. Verde, Piso 4',
- 4, 11, 2, 1009, '2023-04-01', 'Fibra5G', 3, '2023-04-01', 1200.00, 'A'),
+  (13, 'Distribuciones', 'Oriente', 'Distribuciones Oriente C.A.', '1978-11-11', 'J556677889', 'NA',
+   2, 'ventas@oriente.com', '+5802125566778', 'Av. Libertador, Local 5',
+   7, 20, 1, 2005, '2019-09-30', 'Empresas_12GB', 4, '2019-09-30', 437.19, 'A'),
 
--- Cliente jurídico
-(15, 'Inversiones', 'Delta', 'Inversiones Delta S.A.', '1985-05-05', 'J334455667', 'NA',
- 2, 'info@delta.com', '+5802123344556', 'Zona Empresarial, Torre Delta',
- 5, 15, 3, 2006, '2020-03-15', 'Empresas_6GB', 5, '2020-03-15', 218.59, 'A'),
+  (14, 'Gabriela', 'Moreno', NULL, '1991-10-10', 'V22334455', 'Femenino',
+   1, 'gmoreno@gmail.com', '+5804122233445', 'Calle 8, Edif. Verde, Piso 4',
+   4, 11, 2, 1009, '2023-04-01', 'Fibra5G', 3, '2023-04-01', 1200.00, 'A'),
 
--- Cliente natural
-(16, 'Daniela', 'Suárez', NULL, '1996-12-12', 'V77889900', 'Femenino',
- 1, 'dsuarez@gmail.com', '+5804127788990', 'Sector Las Palmas, Casa 10',
- 6, 18, 1, 1010, '2024-02-20', 'Basico_Plus', 6, '2024-02-20', 26.25, 'A');
+  (15, 'Inversiones', 'Delta', 'Inversiones Delta S.A.', '1985-05-05', 'J334455667', 'NA',
+   2, 'info@delta.com', '+5802123344556', 'Zona Empresarial, Torre Delta',
+   5, 15, 3, 2006, '2020-03-15', 'Empresas_6GB', 5, '2020-03-15', 218.59, 'A'),
+
+  (16, 'Daniela', 'Suárez', NULL, '1996-12-12', 'V77889900', 'Femenino',
+   1, 'dsuarez@gmail.com', '+5804127788990', 'Sector Las Palmas, Casa 10',
+   6, 18, 1, 1010, '2024-02-20', 'Basico_Plus', 6, '2024-02-20', 26.25, 'A')
+AS c
+ON DUPLICATE KEY UPDATE
+  Nombre = c.Nombre,
+  Apellido = c.Apellido,
+  Razon_Social = c.Razon_Social,
+  FechaNacimiento = c.FechaNacimiento,
+  DNI = c.DNI,
+  Genero = c.Genero,
+  ID_Canal = c.ID_Canal,
+  Correo = c.Correo;
+
 
 
 select * from customer_plan;
 ------ insert donde se hace un select para buscar la data alojada en la tabla customner de dos caampos en especificos que son:  id_cliente y id_planservicio
-INSERT INTO customer_plan (id_cliente, id_planservicio)
-SELECT c.id_cliente, c.id_plan
+INSERT INTO customer_plan (ID_Cliente, ID_PlanServicio)
+SELECT c.ID_Cliente, c.ID_PlanServicio
 FROM customer c
-INNER JOIN plan_servicios p
-  ON c.id_plan = p.ID_PlanServicio;
+INNER JOIN plan_servicios p ON c.ID_PlanServicio = p.ID_PlanServicio
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM customer_plan cp
+  WHERE cp.ID_Cliente = c.ID_Cliente
+    AND cp.ID_PlanServicio = c.ID_PlanServicio
+);
